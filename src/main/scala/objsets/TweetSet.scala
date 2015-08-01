@@ -149,18 +149,18 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
   def mostRetweeted: Tweet = {
 
-    def mostRetweeted(l: TweetSet, r: TweetSet): Tweet =
-      if (l.isInstanceOf[Empty] && r.isInstanceOf[Empty])
+    def mostRetweeted(setOne: TweetSet, setTwo: TweetSet): Tweet =
+      if (setOne.isInstanceOf[Empty] && setTwo.isInstanceOf[Empty])
         elem
-      else if (l.isInstanceOf[Empty])
-        r.mostRetweeted
+      else if (setOne.isInstanceOf[Empty])
+        setTwo.mostRetweeted
       else
-        l.mostRetweeted
+        setOne.mostRetweeted
 
-    def better(that: Tweet): Boolean =
-      (elem.retweets < that.retweets)
+    def betterThanRoot(that: Tweet): Boolean =
+      elem.retweets < that.retweets
 
-    mostRetweeted(left.filter(better), right.filter(better))
+    mostRetweeted(left filter betterThanRoot, right filter betterThanRoot)
   }
 
   def descendingByRetweet: TweetList =
@@ -218,10 +218,10 @@ object GoogleVsApple {
   val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
   val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
-  lazy val googleTweets: TweetSet = 
+  lazy val googleTweets: TweetSet =
     TweetReader.allTweets.filter(tweet => google.exists(word => tweet.text.contains(word)))
-    
-  lazy val appleTweets: TweetSet = 
+
+  lazy val appleTweets: TweetSet =
     TweetReader.allTweets.filter(tweet => apple.exists(word => tweet.text.contains(word)))
 
   /**
